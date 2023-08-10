@@ -7,7 +7,7 @@ rust-version = "1.65.0"
 description = "Library for building canisters on the Internet Computer."
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/internet-computer-protocol/rustic-macros/"
-keywords = ["icp", "blockchain", "smart contracts"]
+keywords = ["icp", "blockchain", "smart-contracts"]
 categories = ["cryptography::cryptocurrencies", "finance", "wasm"]
 
 
