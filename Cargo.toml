@@ -1,6 +1,6 @@
 [package]
 name = "rustic-macros"
-version = "0.0.1"
+version = "0.1.0"
 authors = ["Benji Zhai"]
 edition = "2021"
 rust-version = "1.65.0"
@@ -18,7 +18,7 @@ categories = ["cryptography::cryptocurrencies", "finance", "wasm"]
 proc-macro2 = "1.0"
 quote = "1.0"
 syn = { version = "1.0", features = ["fold", "full"]}
-ic-cdk = "0.9.2"
+ic-cdk = "0.9"
 
 [lib]
 proc-macro = true
