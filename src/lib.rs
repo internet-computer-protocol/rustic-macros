@@ -58,11 +58,17 @@ pub fn modifiers(args: TokenStream, input: TokenStream) -> TokenStream {
                     param_token
                 })
                 .collect();
-            quote! {
-                let r: Result<(), String> = #modi_ident(#(#params_tokens),*);
-                if let Err(e) = r {
-                    ic_cdk::api::call::reject(&e);
-                    panic!("{} failed: {}", stringify!(#modi_ident), e);
+            if modi == "non_reentrant" {
+                quote! {
+                    let __guard = rustic::reentrancy_guard::ReentrancyGuard::new();
+                }
+            } else {
+                quote! {
+                    let r: Result<(), String> = #modi_ident(#(#params_tokens),*);
+                    if let Err(e) = r {
+                        ic_cdk::api::call::reject(&e);
+                        panic!("{} failed: {}", stringify!(#modi_ident), e);
+                    }
                 }
             }
         })
