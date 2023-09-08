@@ -24,6 +24,18 @@ fn test_fn3() {
     unimplemented!()
 }
 
+#[modifiers("func_a")]
+pub fn test_fn4() {
+    // some code
+    unimplemented!()
+}
+
+#[modifiers("func_a")]
+pub async fn test_fn5() {
+    // some code
+    unimplemented!()
+}
+
 fn func_a() -> Result<(), String> {
     Ok(())
 }

@@ -9,6 +9,10 @@ pub fn modifiers(args: TokenStream, input: TokenStream) -> TokenStream {
     let args = parse_macro_input!(args as AttributeArgs);
     let func = parse_macro_input!(input as ItemFn);
 
+    // Capture asyncness and visibility
+    let asyncness = &func.sig.asyncness;
+    let vis = &func.vis;
+
     // Transform attribute arguments to strings
     let mut modifiers: Vec<(String, Vec<String>)> = Vec::new();
     for arg in args {
@@ -59,7 +63,7 @@ pub fn modifiers(args: TokenStream, input: TokenStream) -> TokenStream {
         .collect();
 
     let expanded = quote! {
-        fn #fn_name(#fn_params) {
+        #vis #asyncness fn #fn_name(#fn_params) {
             #(#modifier_checks)*
             #(#fn_stmts)*
         }
