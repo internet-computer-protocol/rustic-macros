@@ -25,15 +25,17 @@ fn test_fn3() {
 }
 
 #[modifiers("func_a")]
-pub fn test_fn4() {
-    // some code
-    unimplemented!()
-}
-
-#[modifiers("func_a")]
-pub async fn test_fn5() {
-    // some code
-    unimplemented!()
+pub async fn test_fn4<'a, T, U>(
+    _arg1: &'a str,
+    arg2: T,
+    _arg3: U,
+) -> Result<T, Box<dyn std::error::Error + 'a>>
+where
+    T: std::fmt::Debug + 'a,
+    U: std::fmt::Display,
+{
+    // Function body
+    Ok(arg2)
 }
 
 fn func_a() -> Result<(), String> {

@@ -12,6 +12,12 @@ pub fn modifiers(args: TokenStream, input: TokenStream) -> TokenStream {
     // Capture asyncness and visibility
     let asyncness = &func.sig.asyncness;
     let vis = &func.vis;
+    let ret_type = &func.sig.output;
+    let generics = &func.sig.generics;
+    let where_clause = &func.sig.generics.where_clause;
+    let attrs = &func.attrs;
+    let _unsafety = &func.sig.unsafety;
+    let _abi = &func.sig.abi;
 
     // Transform attribute arguments to strings
     let mut modifiers: Vec<(String, Vec<String>)> = Vec::new();
@@ -56,14 +62,15 @@ pub fn modifiers(args: TokenStream, input: TokenStream) -> TokenStream {
                 let r: Result<(), String> = #modi_ident(#(#params_tokens),*);
                 if let Err(e) = r {
                     ic_cdk::api::call::reject(&e);
-                    return;
+                    panic!("{} failed: {}", stringify!(#modi_ident), e);
                 }
             }
         })
         .collect();
 
     let expanded = quote! {
-        #vis #asyncness fn #fn_name(#fn_params) {
+        #(#attrs)*
+        #vis #asyncness fn #fn_name #generics (#fn_params) #ret_type #where_clause {
             #(#modifier_checks)*
             #(#fn_stmts)*
         }
