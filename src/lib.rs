@@ -8,27 +8,41 @@ use syn::{parse_macro_input, AttributeArgs, ItemFn, NestedMeta};
 
 /// Macro used to add guards to functions. If the guard function returns `Ok` then execution would continue.
 /// If the guard function returns `Err` the execution would stop and state changes would be reverted by invoking `ic_cdk::api::call::reject`.
-/// 
+///
 /// If multiple guard functions exist they're executed in the order declared.
-/// 
+///
 /// Usually the `modifiers` macro should be the last macro declared for a function, below everything else such as `update` and `query`.
-/// Those are the only macros tested to work together with this `modifiers` macro. 
-/// If you would like to use it with other macros or use a different order, remember Rust macro ordering rules apply, and always check the expanded result. 
-/// 
+/// Those are the only macros tested to work together with this `modifiers` macro.
+/// If you would like to use it with other macros or use a different order, remember Rust macro ordering rules apply, and always check the expanded result.
+///
 /// The signatures of guard functions must be of
 /// ```
-/// fn func_name(params...) -> Result<(), String>
+/// fn guard_func<T>(param: T) -> Result<(), String>
+/// # { Ok(()) }
 /// ```
 /// Then the guard functions can be added as modifiers using the follow syntax:
+/// ```ignore
+/// # use rustic_macros::modifiers;
+/// #[modifiers("guard_func@param", ...)]
+/// fn my_func() {}
 /// ```
-/// #[modifiers("func_name@params", ...)]
-/// ```
-/// The `params` is a commma-separated list(without spaces in between) of the arguments.
+/// The `param` can be a commma-separated list(without spaces in between) of the arguments.
 /// # Examples
 /// ```
-/// #[modifiers("guard_func")]
+/// # fn guard_func0() -> Result<(), String>
+/// # { Ok(()) }
+/// # fn guard_func1() -> Result<(), String>
+/// # { Ok(()) }
+/// # fn guard_func(a: u8, b: SomeEnum) -> Result<(), String>
+/// # { Ok(()) }
+/// # enum SomeEnum {A,B}
+/// # use rustic_macros::modifiers;
+/// #[modifiers("guard_func0")]
+/// fn my_func0() {}
 /// #[modifiers("guard_func@42,SomeEnum::A")]
+/// fn my_func1() {}
 /// #[modifiers("guard_func0", "guard_func1")]
+/// fn my_func2() {}
 /// ```
 #[proc_macro_attribute]
 pub fn modifiers(args: TokenStream, input: TokenStream) -> TokenStream {
@@ -86,7 +100,7 @@ pub fn modifiers(args: TokenStream, input: TokenStream) -> TokenStream {
                 .collect();
             if modi == "non_reentrant" {
                 quote! {
-                    let __guard = rustic::reentrancy_guard::ReentrancyGuard::new();
+                    let __guard = ::rustic::reentrancy_guard::ReentrancyGuard::new();
                 }
             } else {
                 quote! {
