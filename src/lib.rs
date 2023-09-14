@@ -64,7 +64,7 @@ pub fn modifiers(args: TokenStream, input: TokenStream) -> TokenStream {
     for arg in args {
         if let NestedMeta::Lit(syn::Lit::Str(lit)) = arg {
             let val = lit.value();
-            let parts: Vec<_> = val.split("@").collect();
+            let parts: Vec<_> = val.split('@').collect();
             let func_name = parts[0].to_string();
             let params = if parts.len() > 1 {
                 parts[1..]
@@ -90,7 +90,7 @@ pub fn modifiers(args: TokenStream, input: TokenStream) -> TokenStream {
     let modifier_checks: Vec<proc_macro2::TokenStream> = modifiers
         .iter()
         .map(|(modi, params)| {
-            let modi_ident: syn::Ident = syn::Ident::new(&modi, proc_macro2::Span::call_site());
+            let modi_ident: syn::Ident = syn::Ident::new(modi, proc_macro2::Span::call_site());
             let params_tokens: Vec<proc_macro2::TokenStream> = params
                 .iter()
                 .map(|p| {
