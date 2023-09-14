@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use rustic_macros::modifiers;
 
 #[modifiers("func_a")]
@@ -42,11 +43,11 @@ fn func_a() -> Result<(), String> {
     Ok(())
 }
 
-fn func_b(param: u64) -> Result<(), String> {
+fn func_b(_param: u64) -> Result<(), String> {
     Ok(())
 }
 
-fn func_c(param0: u64, param1: u64) -> Result<(), String> {
+fn func_c(_param0: u64, _param1: u64) -> Result<(), String> {
     Ok(())
 }
 
@@ -55,7 +56,7 @@ enum TestEnum {
     B,
 }
 
-fn func_d(param0: u64, param1: TestEnum) -> Result<(), String> {
+fn func_d(_param0: u64, _param1: TestEnum) -> Result<(), String> {
     Ok(())
 }
 
